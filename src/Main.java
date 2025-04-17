@@ -36,7 +36,7 @@ public class Main {
 
                 case 2: // Видалення користувача
                     System.out.print("Введіть ПІБ користувача для видалення: ");
-                    scanner.nextLine();
+
                     String fullNameToDelete = scanner.nextLine();
                     manager.deleteUserById(fullNameToDelete);
                     break;
@@ -47,7 +47,6 @@ public class Main {
 
                 case 4: // Перегляд замовлень конкретного користувача
                     System.out.print("Введіть ПІБ користувача для перегляду замовлень: ");
-                    scanner.nextLine();
                     String fullNameToShowOrders = scanner.nextLine();
                     manager.viewOrdersForUser(fullNameToShowOrders);
                     break;
