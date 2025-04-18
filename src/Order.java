@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Order {
     private static int nextId = 1;
 
@@ -15,23 +17,51 @@ public class Order {
         this.isAccepted = false;
     }
 
-    public void editOrder(String newDescription, Double newPrice, String newAddresses) {
+    public boolean getIsAccepted() {
+        return  isAccepted;
+    }
+
+    public String getStatus(){
+        String status;
+        if (getIsAccepted()) {
+            return status = "Прийняте";
+        } else {
+            return status = "Не прийняте";
+        }
+    }
+
+    public void editOrder() {
         if (!isAccepted) {
-            if (newDescription != null) {
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.print("Введіть новий опис (або натисніть Enter, щоб не змінювати): ");
+            String newDescription = scanner.nextLine();
+            if (!newDescription.isEmpty()) {
                 this.description = newDescription;
                 System.out.println("Змінено опис замовлення.");
             }
-            if (newPrice != null && newPrice >= 0) {
-                this.price = newPrice;
-                System.out.println("Змінено ціну замовлення.");
+
+            System.out.print("Введіть нову ціну (або натисніть Enter, щоб не змінювати): ");
+            String priceInput = scanner.nextLine();
+            if (!priceInput.isEmpty()) {
+                double newPrice = Double.parseDouble(priceInput);
+                if (newPrice >= 0) {
+                    this.price = newPrice;
+                    System.out.println("Змінено ціну замовлення.");
+                } else {
+                    System.out.println("Ціна не може бути від’ємною.");
+                }
             }
-            if (newAddresses != null) {
-                this.addresses = newAddresses;
+
+            System.out.print("Введіть нову адресу (або натисніть Enter, щоб не змінювати): ");
+            String newAddress = scanner.nextLine();
+            if (!newAddress.isEmpty()) {
+                this.addresses = newAddress;
                 System.out.println("Змінено адресу замовлення.");
             }
 
         } else {
-            System.out.println("Замовлення не змінено.");;
+            System.out.println("Замовлення вже підтверджено. Редагування неможливе.");
         }
     }
 

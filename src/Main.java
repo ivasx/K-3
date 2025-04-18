@@ -49,6 +49,7 @@ public class Main {
                     System.out.print("Введіть ПІБ користувача для перегляду замовлень: ");
                     String fullNameToShowOrders = scanner.nextLine();
                     manager.viewOrdersForUser(fullNameToShowOrders);
+
                     break;
 
                 case 5: // Сортування користувачів
@@ -159,35 +160,35 @@ public class Main {
         manager.getUsers().get(2).addOrder(new Order("Книги", 200, "вул. Хрещатик, 5"));
 
         manager.addUser(new User("Анна", "Коваль", 25));
-        manager.getUsers().get(2).addOrder(new Order("Одяг", 300, "вул. Довженка, 10"));
-        manager.getUsers().get(2).addOrder(new Order("Книги", 200, "вул. Хрещатик, 5"));
+        manager.getUsers().get(3).addOrder(new Order("Меблі", 300, "вул. Довженка, 10"));
+        manager.getUsers().get(3).addOrder(new Order("Будматеріали", 1000, "вул. Хрещатик, 5"));
 
         manager.addUser(new User("Марія", "Левченко", 30));
-        manager.getUsers().get(3).addOrder(new Order("Продукти", 700, "вул. Коцюбинського, 4"));
-        manager.getUsers().get(3).addOrder(new Order("Іграшки", 400, "вул. Микільська, 8"));
+        manager.getUsers().get(4).addOrder(new Order("Продукти", 700, "вул. Коцюбинського, 4"));
+        manager.getUsers().get(4).addOrder(new Order("Іграшки", 400, "вул. Микільська, 8"));
 
         manager.addUser(new User("Олег", "Іванов", 28));
-        manager.getUsers().get(4).addOrder(new Order("Меблі", 2500, "вул. Горького, 7"));
-        manager.getUsers().get(4).addOrder(new Order("Камера", 1200, "вул. Леніна, 3"));
+        manager.getUsers().get(5).addOrder(new Order("Меблі", 2500, "вул. Горького, 7"));
+        manager.getUsers().get(5).addOrder(new Order("Камера", 1200, "вул. Леніна, 3"));
 
         manager.addUser(new User("Ірина", "Петренко", 35));
-        manager.getUsers().get(5).addOrder(new Order("Комп'ютер", 6000, "вул. Шовковична, 12"));
-        manager.getUsers().get(5).addOrder(new Order("Мобільний телефон", 4500, "вул. Різдвяна, 15"));
+        manager.getUsers().get(6).addOrder(new Order("Комп'ютер", 6000, "вул. Шовковична, 12"));
+        manager.getUsers().get(6).addOrder(new Order("Мобільний телефон", 4500, "вул. Різдвяна, 15"));
 
         manager.addUser(new User("Артем", "Савченко", 27));
-        manager.getUsers().get(6).addOrder(new Order("Техніка", 3000, "вул. Дарницька, 2"));
-        manager.getUsers().get(6).addOrder(new Order("Телевізор", 5500, "вул. Хмельницька, 9"));
+        manager.getUsers().get(7).addOrder(new Order("Техніка", 3000, "вул. Дарницька, 2"));
+        manager.getUsers().get(7).addOrder(new Order("Телевізор", 5500, "вул. Хмельницька, 9"));
 
         manager.addUser(new User("Світлана", "Гусак", 24));
-        manager.getUsers().get(7).addOrder(new Order("Книга", 150, "вул. Гоголя, 14"));
-        manager.getUsers().get(7).addOrder(new Order("Біжутерія", 350, "вул. Сагайдачного, 1"));
+        manager.getUsers().get(8).addOrder(new Order("Книга", 150, "вул. Гоголя, 14"));
+        manager.getUsers().get(8).addOrder(new Order("Біжутерія", 350, "вул. Сагайдачного, 1"));
 
         manager.addUser(new User("Дмитро", "Петрик", 40));
-        manager.getUsers().get(8).addOrder(new Order("Спортивне спорядження", 2000, "вул. Науки, 5"));
-        manager.getUsers().get(8).addOrder(new Order("Телефон", 2000, "вул. Остромова, 11"));
+        manager.getUsers().get(9).addOrder(new Order("Спортивне спорядження", 2000, "вул. Науки, 5"));
+        manager.getUsers().get(9).addOrder(new Order("Телефон", 2000, "вул. Остромова, 11"));
 
         manager.addUser(new User("Катерина", "Шевченко", 22));
-        manager.getUsers().get(9).addOrder(new Order("Меблі", 1200, "вул. Хрещатик, 8"));
-        manager.getUsers().get(9).addOrder(new Order("Декор", 600, "вул. Вишневий, 7"));
+        manager.getUsers().get(10).addOrder(new Order("Меблі", 1200, "вул. Хрещатик, 8"));
+        manager.getUsers().get(10).addOrder(new Order("Декор", 600, "вул. Вишневий, 7"));
     }
 }

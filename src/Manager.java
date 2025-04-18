@@ -22,31 +22,45 @@ public class Manager {
 
     public void deleteUserById(String fullName) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Integer> ids = new ArrayList<>();
+        ArrayList<User> matchedUsers  = new ArrayList<>();
+
         for (User user : users.values()) {
-            if (user.getFullName().equals(fullName)) {
-                System.out.println("ID: " + user.getId() + " " + user.getFullName());
-                ids.add(user.getId());
+            if (user.getFullName().equalsIgnoreCase(fullName)) {
+                matchedUsers.add(user);
             }
         }
-        if (ids.isEmpty()){
+
+        if (matchedUsers.isEmpty()) {
             System.out.println("Користувача з таким ПІБ не знайдено.");
-        } else if (ids.size() == 1) {
-            System.out.println("Видалено користувача " + users.get(ids.get(0)).getFullName() + " з ID: "
-                    + users.get(ids.get(0)).getId());
-            users.remove(ids.get(0));
-        } else {
-            System.out.println("Уточніть ID користувача, якого хочете видалити: ");
-            int removeId = scanner.nextInt();
-            scanner.nextLine();
-            if (users.keySet().contains(removeId)){
-                System.out.println("Видалено користувача " + users.get(ids.get(0)).getFullName() + " з ID: "
-                        + users.get(ids.get(0)).getId());
+            return;
+        }
+
+        if (matchedUsers.size() == 1) {
+            users.remove(matchedUsers.get(0).getId());
+            System.out.println("Видалено користувача " + matchedUsers.get(0).getFullName() +
+                    " з ID: " + matchedUsers.get(0).getId());
+            return;
+        }
+
+        System.out.println("Знайдено декілька користувачів:");
+        for (User user : matchedUsers) {
+            System.out.println("ID: " + user.getId() + "  " + user.getFullName());
+        }
+
+        System.out.print("Уточніть ID користувача, якого хочете видалити: ");
+        int removeId = scanner.nextInt();
+        scanner.nextLine();
+
+        for (User user : matchedUsers) {
+            if (user.getId() == removeId) {
                 users.remove(removeId);
-            } else {
-                System.out.println("Введено неправильне ID.");
+                System.out.println("Видалено користувача " + user.getFullName() + " з ID: " + removeId);
+                user.clearOrders();
+                return;
             }
         }
+
+        System.out.println("Введено неправильне ID.");
     }
 
     public ArrayList<User> filterByExactAge(int age) {      // Фільтрування за конкретним віком
@@ -151,36 +165,103 @@ public class Manager {
 
     public void viewOrdersForUser(String fullName) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Integer> ids = new ArrayList<>();
+        ArrayList<User> matchedUsers = new ArrayList<>();
 
         for (User user : users.values()) {
-            if (user.getFullName().equals(fullName)) {
-                System.out.println("ID: " + user.getId() + " " + user.getFullName());
-                ids.add(user.getId());
+            if (user.getFullName().equalsIgnoreCase(fullName)) {
+                matchedUsers.add(user);
             }
         }
 
-        if (ids.isEmpty()){
+        if (matchedUsers.isEmpty()) {
             System.out.println("Користувача з таким ПІБ не знайдено.");
-        } else if (ids.size() == 1) {
-            System.out.println("Замовлення користувача " + users.get(ids.get(0)).getFullName() + " з ID: " + users.get(ids.get(0)).getId() + ": ");
-            System.out.println(users.get(ids.get(0)).getOrders());
+            return;
+        }
+
+        if (matchedUsers.size() == 1) {
+            User user = matchedUsers.get(0);
+            System.out.println("Замовлення користувача " + user.getFullName() +
+                    " з ID: " + user.getId() + ":");
+            if (user.getOrders().isEmpty()) {
+                System.out.println("У користувача немає замовлень.");
+            } else {
+                displayOrders(user);
+
+                System.out.println("Редагувати замовлення користувача? (y/n) (Щоб видалити введіть d):");
+                String answer = scanner.nextLine();
+
+                if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("d")) {
+                    changeOrder(user, answer);
+                }
+            }
         } else {
+            // Якщо знайдено кілька користувачів
+            System.out.println("Знайдено кількох користувачів:");
+            for (User user : matchedUsers) {
+                System.out.println("ID: " + user.getId() + "   " + user.getFullName());
+            }
             System.out.println("Уточніть ID користувача, замовлення якого хочете переглянути: ");
             int ordersId = scanner.nextInt();
             scanner.nextLine();
-            if (users.containsKey(ordersId)) {
-                System.out.println("Замовлення користувача " + users.get(ordersId).getFullName() + " з ID: " + ordersId + ": ");
-                if (users.get(ordersId).getOrders().isEmpty()) {
-                    System.out.println("У користувача немає замовлень.");
-                } else {
-                    for (Order order : users.get(ordersId).getOrders()) {
-                        System.out.println("Опис: " + order.getDescription() + ", Ціна: " + order.getPrice());
+
+            boolean userFound = false;
+            for (User user : matchedUsers) {
+                if (user.getId() == ordersId) {
+                    System.out.println("Замовлення користувача " + user.getFullName() + " з ID: " + user.getId() + ":");
+                    if (user.getOrders().isEmpty()) {
+                        System.out.println("У користувача немає замовлень.");
+                    } else {
+                        displayOrders(user);
+
+                        System.out.println("Редагувати замовлення користувача? (y/n) (Щоб видалити введіть d):");
+                        String answer = scanner.nextLine();
+                        if (answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("d")) {
+                            changeOrder(user, answer);
+                        }
                     }
+                    userFound = true;
+                    break;
                 }
-            } else {
+            }
+
+            if (!userFound) {
                 System.out.println("Введено неправильне ID.");
             }
+        }
+    }
+
+    private void displayOrders(User user) {
+        for (Order order : user.getOrders()) {
+            System.out.println("ID замовлення: " + order.getId() + " Опис: " + order.getDescription()
+                    + ", Ціна: " + order.getPrice() + " Статус: " + order.getStatus());
+        }
+    }
+
+    private void changeOrder(User user, String action) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введіть ID замовлення, яке хочете змінити: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+        boolean found = false;
+
+        // Перевіряємо замовлення за ID
+        for (Order order : user.getOrders()) {
+            if (order.getId() == id) {
+                if (action.equalsIgnoreCase("y")) {
+                    // Викликаємо метод редагування для замовлення
+                    order.editOrder(); // Викликаємо editOrder у класі Order
+                    System.out.println("Замовлення змінено.");
+                } else if (action.equalsIgnoreCase("d")) {
+                    user.getOrders().remove(order); // Видаляємо замовлення
+                    System.out.println("Замовлення видалено.");
+                }
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Введено некоректне ID замовлення.");
         }
     }
 
