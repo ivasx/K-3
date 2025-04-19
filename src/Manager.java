@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class Manager {
     private HashMap<Integer, User> users;
@@ -9,7 +6,6 @@ public class Manager {
     public  Manager (){
         this.users = new HashMap<>();
     }
-
 
     public void addUser(User user) {
         if (!users.containsKey(user.getId())) {
@@ -63,84 +59,67 @@ public class Manager {
         System.out.println("Введено неправильне ID.");
     }
 
-    public ArrayList<User> filterByExactAge(int age) {      // Фільтрування за конкретним віком
+    public void filterByAge(int age) {      // Фільтрування за конкретним віком
         ArrayList<User> filteredUsers = new ArrayList<>();
         for (User user : users.values()) {
             if (user.getAge() == age) {
                 filteredUsers.add(user);
             }
         }
-        return filteredUsers;
+        showAllUsers(filteredUsers);
+
     }
 
-    public ArrayList<User> filterByAge(int minAge, int maxAge) {    // Фільтрування за діапазоном віків
+    public void filterByAge(int minAge, int maxAge) {    // Фільтрування за діапазоном віків
         ArrayList<User> filteredUsers = new ArrayList<>();
         for (User user : users.values()) {
             if (user.getAge() >= minAge && user.getAge() <= maxAge) {
                 filteredUsers.add(user);
             }
         }
-        return filteredUsers;
+        showAllUsers(filteredUsers);
     }
 
-    public ArrayList<User> filterByPurchaseDescription(String description) {
+    public void filterByPurchasePrice(double minPrice, double maxPrice) {
         ArrayList<User> filteredUsers = new ArrayList<>();
         for (User user : users.values()) {
             for (Order order : user.getOrders()) {
-                if (order.getDescription().equalsIgnoreCase(description)) {
+                if (order.getPrice() >= minPrice && order.getPrice() <= maxPrice) {
                     filteredUsers.add(user);
                     break;
                 }
             }
         }
-        return filteredUsers;
+        showAllUsers(filteredUsers);
     }
 
-    public ArrayList<User> filterByPurchasePrice(double price) {
+    public void filterByPurchaseCount(int count) {
         ArrayList<User> filteredUsers = new ArrayList<>();
         for (User user : users.values()) {
-            for (Order order : user.getOrders()) {
-                if (order.getPrice() == price) {
-                    filteredUsers.add(user);
-                    break;
-                }
+            if (user.getOrderCount() == count) {
+                filteredUsers.add(user);
             }
         }
-        return filteredUsers;
+        showAllUsers(filteredUsers);
     }
 
-    public ArrayList<User> sortBy(SortType type) {
+    public void sortBy(String type) {
         ArrayList<User> sortedUsers = new ArrayList<>(users.values());
-
         switch (type){
-            case FULLNAME:
+            case "name":
                 sortedUsers.sort(Comparator.comparing(User::getFullName));
+                showAllUsers(sortedUsers);
                 break;
-            case AGE:
+            case "age":
                 sortedUsers.sort(Comparator.comparingInt(User::getAge));
+                showAllUsers(sortedUsers);
                 break;
-            case ORDERS:
+            case "orders":
                 sortedUsers.sort(Comparator.comparingInt(User::getOrderCount));
+                showAllUsers(sortedUsers);
                 break;
             default:
                 System.out.println("Непривльний тип сортування.");
-        }
-        return sortedUsers;
-    }
-
-    public enum SortType {
-        FULLNAME("ПІБ"),
-        AGE("ВІКОМ"),
-        ORDERS("ЗАМОВЛЕННЯМИ");
-
-        private String type;
-
-        SortType(String type) {
-            this.type = type;
-        }
-
-        public String getType() {
-            return type;
         }
     }
 
@@ -156,10 +135,27 @@ public class Manager {
         return totalOrders;
     }
 
-    public void showAllUsers() {
-        System.out.println("Список користувачів:");
+    public double averageAge() {
+        int average = 0;
         for (User user : users.values()) {
-            System.out.println(user.getFullName() + " (ID: " + user.getId() + ")");
+            average += user.getAge();
+        }
+        average = average / users.size();
+        return average;
+    }
+
+    public void showAllUsers() {
+        showAllUsers(users.values());
+    }
+
+    public void showAllUsers(Collection<User> userList) {
+        if (userList.isEmpty()) {
+            System.out.println("Користувачів не знайдено.");
+            return;
+        }
+        System.out.println("Список користувачів:");
+        for (User user : userList) {
+            user.showUserInfo();
         }
     }
 
@@ -232,8 +228,12 @@ public class Manager {
 
     private void displayOrders(User user) {
         for (Order order : user.getOrders()) {
-            System.out.println("ID замовлення: " + order.getId() + " Опис: " + order.getDescription()
-                    + ", Ціна: " + order.getPrice() + " Статус: " + order.getStatus());
+            System.out.println("ID замовлення: " + order.getId());
+            System.out.println("Опис: " + order.getDescription());
+            System.out.println("Ціна: " + order.getPrice());
+            System.out.println("Статус: " + order.getStatus());
+            System.out.println("Адреса замовленння: " + order.getAddresses());
+            System.out.println();
         }
     }
 
@@ -244,15 +244,13 @@ public class Manager {
         scanner.nextLine();
         boolean found = false;
 
-        // Перевіряємо замовлення за ID
         for (Order order : user.getOrders()) {
             if (order.getId() == id) {
                 if (action.equalsIgnoreCase("y")) {
-                    // Викликаємо метод редагування для замовлення
-                    order.editOrder(); // Викликаємо editOrder у класі Order
+                    order.editOrder();
                     System.out.println("Замовлення змінено.");
                 } else if (action.equalsIgnoreCase("d")) {
-                    user.getOrders().remove(order); // Видаляємо замовлення
+                    user.getOrders().remove(order);
                     System.out.println("Замовлення видалено.");
                 }
                 found = true;
