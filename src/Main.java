@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -36,7 +35,6 @@ public class Main {
 
                 case 2: // Видалення користувача
                     System.out.print("Введіть ПІБ користувача для видалення: ");
-
                     String fullNameToDelete = scanner.nextLine();
                     manager.deleteUserById(fullNameToDelete);
                     break;
@@ -49,7 +47,6 @@ public class Main {
                     System.out.print("Введіть ПІБ користувача для перегляду замовлень: ");
                     String fullNameToShowOrders = scanner.nextLine();
                     manager.viewOrdersForUser(fullNameToShowOrders);
-
                     break;
 
                 case 5: // Сортування користувачів
@@ -60,25 +57,13 @@ public class Main {
                     int sortChoice = scanner.nextInt();
                     switch (sortChoice) {
                         case 1:
-                            manager.sortBy(Manager.SortType.FULLNAME);
-                            System.out.println("Список користувачів:");
-                            for (User user : manager.getUsers().values()) {
-                                System.out.println(user.getFullName() + " (ID: " + user.getId() + ")");
-                            }
+                            manager.sortBy("name");
                             break;
                         case 2:
-                            manager.sortBy(Manager.SortType.AGE);
-                            System.out.println("Список користувачів:");
-                            for (User user : manager.getUsers().values()) {
-                                System.out.println(user.getFullName() + " (ID: " + user.getId() + ")");
-                            }
+                            manager.sortBy("age");
                             break;
                         case 3:
-                            manager.sortBy(Manager.SortType.ORDERS);
-                            System.out.println("Список користувачів:");
-                            for (User user : manager.getUsers().values()) {
-                                System.out.println(user.getFullName() + " (ID: " + user.getId() + ")");
-                            }
+                            manager.sortBy("orders");
                             break;
                         default:
                             System.out.println("Невірний вибір.");
@@ -88,45 +73,34 @@ public class Main {
                 case 6: // Фільтрація користувачів
                     System.out.println("1. Фільтрувати за конкретним віком");
                     System.out.println("2. Фільтрувати за діапазоном віків");
-                    System.out.println("3. Фільтрувати за описом замовлення");
-                    System.out.println("4. Фільтрувати за ціною замовлення");
+                    System.out.println("3. Фільтрувати за ціною замовлення");
+                    System.out.println("4. Фільтрувати за кількістю замовленнь");
                     System.out.print("Виберіть опцію для фільтрації: ");
                     int filterChoice = scanner.nextInt();
                     switch (filterChoice) {
                         case 1:
                             System.out.print("Введіть вік для фільтрації: ");
-                            int exactAge = scanner.nextInt();
-                            ArrayList<User> usersByExactAge = manager.filterByExactAge(exactAge);
-                            for (User user : usersByExactAge) {
-                                System.out.println(user.getFullName());
-                            }
+                            int filterAge = scanner.nextInt();
+                            manager.filterByAge(filterAge);
                             break;
                         case 2:
                             System.out.print("Введіть мінімальний вік: ");
                             int minAge = scanner.nextInt();
                             System.out.print("Введіть максимальний вік: ");
                             int maxAge = scanner.nextInt();
-                            ArrayList<User> usersByAgeRange = manager.filterByAge(minAge, maxAge);
-                            for (User user : usersByAgeRange) {
-                                System.out.println(user.getFullName());
-                            }
+                            manager.filterByAge(minAge, maxAge);
                             break;
                         case 3:
-                            scanner.nextLine();
-                            System.out.print("Введіть опис замовлення для фільтрації: ");
-                            String description = scanner.nextLine();
-                            ArrayList<User> usersByDescription = manager.filterByPurchaseDescription(description);
-                            for (User user : usersByDescription) {
-                                System.out.println(user.getFullName());
-                            }
+                            System.out.print("Введіть мінімальну ціну для фільтрації: ");
+                            double minPrice = scanner.nextDouble();
+                            System.out.print("Введіть максимальну ціну для фільтрації: ");
+                            double maxPrice = scanner.nextDouble();
+                            manager.filterByPurchasePrice(minPrice, maxPrice);
                             break;
                         case 4:
-                            System.out.print("Введіть ціну для фільтрації: ");
-                            double price = scanner.nextDouble();
-                            ArrayList<User> usersByPrice = manager.filterByPurchasePrice(price);
-                            for (User user : usersByPrice) {
-                                System.out.println(user.getFullName());
-                            }
+                            System.out.println("Введіть кількість замовлень для фільтрації: ");
+                            int countOrders = scanner.nextInt();
+                            manager.filterByPurchaseCount(countOrders);
                             break;
                         default:
                             System.out.println("Невірний вибір.");
@@ -136,6 +110,7 @@ public class Main {
                 case 7: // Перегляд кількості користувачів та замовлень
                     System.out.println("Загальна кількість користувачів: " + manager.getTotalUsers());
                     System.out.println("Загальна кількість замовлень: " + manager.getTotalOrders());
+                    System.out.println("Середній вік користувачів: " + manager.averageAge());
                     break;
 
                 case 8: // Вихід
@@ -151,13 +126,13 @@ public class Main {
     }
 
     public static void addStartedUsers(Manager manager) {
-        manager.addUser(new User("Івас", "Амброзяк", 18));
+        manager.addUser(new User("Амброзяк", "Івас", 18));
         manager.getUsers().get(1).addOrder(new Order("Товари для дому", 500, "вул. Шевченка, 1"));
         manager.getUsers().get(1).addOrder(new Order("Електроніка", 1500, "вул. Лесі Українки, 2"));
+        manager.getUsers().get(1).addOrder(new Order("Кухонні прилади", 500, "вул. Лесі Українки, 2"));
 
         manager.addUser(new User("Анна", "Коваль", 25));
         manager.getUsers().get(2).addOrder(new Order("Одяг", 300, "вул. Довженка, 10"));
-        manager.getUsers().get(2).addOrder(new Order("Книги", 200, "вул. Хрещатик, 5"));
 
         manager.addUser(new User("Анна", "Коваль", 25));
         manager.getUsers().get(3).addOrder(new Order("Меблі", 300, "вул. Довженка, 10"));
@@ -166,12 +141,14 @@ public class Main {
         manager.addUser(new User("Марія", "Левченко", 30));
         manager.getUsers().get(4).addOrder(new Order("Продукти", 700, "вул. Коцюбинського, 4"));
         manager.getUsers().get(4).addOrder(new Order("Іграшки", 400, "вул. Микільська, 8"));
+        manager.getUsers().get(4).addOrder(new Order("Іграшки", 400, "вул. Микільська, 8"));
+        manager.getUsers().get(4).addOrder(new Order("Іграшки", 400, "вул. Микільська, 8"));
 
         manager.addUser(new User("Олег", "Іванов", 28));
         manager.getUsers().get(5).addOrder(new Order("Меблі", 2500, "вул. Горького, 7"));
         manager.getUsers().get(5).addOrder(new Order("Камера", 1200, "вул. Леніна, 3"));
 
-        manager.addUser(new User("Ірина", "Петренко", 35));
+        manager.addUser(new User("Наталя", "Петренко", 35));
         manager.getUsers().get(6).addOrder(new Order("Комп'ютер", 6000, "вул. Шовковична, 12"));
         manager.getUsers().get(6).addOrder(new Order("Мобільний телефон", 4500, "вул. Різдвяна, 15"));
 
