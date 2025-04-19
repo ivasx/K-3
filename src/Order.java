@@ -31,9 +31,9 @@ public class Order {
     }
 
     public void editOrder() {
+        Scanner scanner = new Scanner(System.in);
+        confirmOrder();
         if (!isAccepted) {
-            Scanner scanner = new Scanner(System.in);
-
             System.out.print("Введіть новий опис (або натисніть Enter, щоб не змінювати): ");
             String newDescription = scanner.nextLine();
             if (!newDescription.isEmpty()) {
@@ -61,16 +61,23 @@ public class Order {
             }
 
         } else {
-            System.out.println("Замовлення вже підтверджено. Редагування неможливе.");
+            System.out.println("Замовлення вже прийняте. Редагування неможливе.");
         }
     }
 
     public void confirmOrder() {
-        if (!this.isAccepted) {
-            this.acceptOrder();
-            System.out.println("Замовлення '" + this.description + "' успішно підтверджено.");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Підвердити прийняття замовлення? (y/n)");
+        String choice = scanner.nextLine();
+        if (choice.equalsIgnoreCase("y")) {
+            if (!this.isAccepted) {
+                this.acceptOrder();
+                System.out.println("Замовлення '" + this.description + "' успішно прийнято.");
+            } else {
+                System.out.println("Замовлення '" + this.description + "' вже прийнято.");
+            }
         } else {
-            System.out.println("Замовлення '" + this.description + "' вже підтверджено.");
+            return;
         }
     }
 
@@ -92,5 +99,9 @@ public class Order {
 
     public void acceptOrder() {
         this.isAccepted = true;
+    }
+
+    public String getAddresses() {
+        return addresses;
     }
 }
