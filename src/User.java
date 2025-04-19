@@ -40,6 +40,13 @@ public class User {
         }
     }
 
+    public void showUserInfo() {
+        System.out.println("ID: " + getId());
+        System.out.println(getFullName());
+        System.out.println("Вік: " + getAge());
+        System.out.println("Кількість замовлень: " + getOrderCount());
+        System.out.println();
+    }
 
     public int getId() {
         return id;
